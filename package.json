@@ -1,0 +1,16 @@
+{
+  "name": "buszy",
+  "version": "1.0.0",
+  "description": "Bus sheduling API",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Kalani",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "mongoose": "^8.9.2",
+    "morgan": "^1.10.0"
+  }
+}
