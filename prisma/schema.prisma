@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  role      UserRole  @default(PASSENGER)
+  name      String
+  phone     String?
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Route {
+  id          String     @id @default(uuid())
+  routeNumber String     @unique
+  origin      String
+  destination String
+  distance    Float
+  duration    Int        // in minutes
+  schedules   Schedule[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("routes")
+}
+
+model Bus {
+  id         String     @id @default(uuid())
+  plateNumber String    @unique
+  capacity   Int
+  type       BusType
+  operator   String
+  schedules  Schedule[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@map("buses")
+}
+
+model Schedule {
+  id        String    @id @default(uuid())
+  routeId   String
+  busId     String
+  departure DateTime
+  arrival   DateTime
+  price     Float
+  route     Route     @relation(fields: [routeId], references: [id])
+  bus       Bus       @relation(fields: [busId], references: [id])
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("schedules")
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  userId     String
+  scheduleId String
+  seatNumber Int
+  status     BookingStatus @default(PENDING)
+  user       User     @relation(fields: [userId], references: [id])
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([scheduleId, seatNumber])
+  @@map("bookings")
+}
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+  PASSENGER
+}
+
+enum BusType {
+  NORMAL
+  SEMI_LUXURY
+  LUXURY
+  SUPER_LUXURY
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
