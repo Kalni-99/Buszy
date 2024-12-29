@@ -21,7 +21,7 @@ const fastify = Fastify({
 fastify.decorate('authenticate', authenticate);
 
 // Connect to MongoDB
-await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/ntc_db');
+await mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://yasasrana77:5gzQoHw8rUXWwv5J@cluster0.fvgdj.mongodb.net/ntc_db');
 console.log('Connected to MongoDB');
 
 // Register plugins
