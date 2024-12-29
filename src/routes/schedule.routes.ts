@@ -50,10 +50,10 @@ export async function scheduleRoutes(fastify: FastifyInstance) {
         }
       }
     },
-    onRequest: [fastify.authenticate]
+   // onRequest: [fastify.authenticate]
   }, (req, reply) => scheduleController.createSchedule(req, reply));
 
   fastify.put('/:id', {
-    onRequest: [fastify.authenticate],
+   // onRequest: [fastify.authenticate],
   }, (req, reply) => scheduleController.updateSchedule(req, reply));
 }

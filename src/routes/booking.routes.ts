@@ -44,14 +44,14 @@ export async function bookingRoutes(fastify: FastifyInstance) {
         }
       }
     },
-    onRequest: [fastify.authenticate]
+    //onRequest: [fastify.authenticate]
   }, (req, reply) => bookingController.create(req, reply));
 
   fastify.get('/my-bookings', {
-    onRequest: [fastify.authenticate],
+   // onRequest: [fastify.authenticate],
   }, (req) => bookingController.getUserBookings(req));
 
   fastify.patch('/:id/cancel', {
-    onRequest: [fastify.authenticate],
+    //onRequest: [fastify.authenticate],
   }, (req, reply) => bookingController.cancelBooking(req, reply));
 }

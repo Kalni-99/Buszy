@@ -35,10 +35,10 @@ export async function routeRoutes(fastify: FastifyInstance) {
         }
       }
     },
-    onRequest: [fastify.authenticate]
+   // onRequest: [fastify.authenticate]
   }, (req, reply) => routeController.createRoute(req, reply));
 
   fastify.put('/:id', {
-    onRequest: [fastify.authenticate],
+   // onRequest: [fastify.authenticate],
   }, (req, reply) => routeController.updateRoute(req, reply));
 }

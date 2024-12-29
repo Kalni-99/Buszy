@@ -55,10 +55,10 @@ export async function busRoutes(fastify: FastifyInstance) {
         }
       }
     },
-    onRequest: [fastify.authenticate]
+    //onRequest: [fastify.authenticate]
   }, (req, reply) => busController.createBus(req, reply));
 
   fastify.put('/:id', {
-    onRequest: [fastify.authenticate],
+    //onRequest: [fastify.authenticate],
   }, (req, reply) => busController.updateBus(req, reply));
 }
