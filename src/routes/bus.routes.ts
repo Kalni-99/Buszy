@@ -1,16 +1,63 @@
 import { FastifyInstance } from 'fastify';
 import { BusController } from '../controllers/bus.controller.js';
+import { BusType } from '../models/Bus.js';
 
 export async function busRoutes(fastify: FastifyInstance) {
   const busController = new BusController();
 
-  fastify.get('/', (req) => busController.getAllBuses(req));
+
   fastify.get('/:id', (req, reply) => busController.getBusById(req, reply));
   
+  fastify.get('/', {
+    schema: {
+      tags: ['Buses'],
+      response: {
+        200: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              plateNumber: { type: 'string' },
+              capacity: { type: 'number' },
+              type: { type: 'string', enum: Object.values(BusType) },
+              operator: { type: 'string' }
+            }
+          }
+        }
+      }
+    }
+  }, (req) => busController.getAllBuses(req));
+
   fastify.post('/', {
-    onRequest: [fastify.authenticate],
+    schema: {
+      tags: ['Buses'],
+      body: {
+        type: 'object',
+        required: ['plateNumber', 'capacity', 'type', 'operator'],
+        properties: {
+          plateNumber: { type: 'string' },
+          capacity: { type: 'number', minimum: 1 },
+          type: { type: 'string', enum: Object.values(BusType) },
+          operator: { type: 'string' }
+        }
+      },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            plateNumber: { type: 'string' },
+            capacity: { type: 'number' },
+            type: { type: 'string' },
+            operator: { type: 'string' }
+          }
+        }
+      }
+    },
+    onRequest: [fastify.authenticate]
   }, (req, reply) => busController.createBus(req, reply));
-  
+
   fastify.put('/:id', {
     onRequest: [fastify.authenticate],
   }, (req, reply) => busController.updateBus(req, reply));

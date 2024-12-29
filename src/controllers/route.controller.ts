@@ -38,7 +38,7 @@ export class RouteController {
     }
 
     const { id } = request.params as any;
-    const route = await Route.findByIdAndUpdate(id, request.body, { new: true });
+    const route = await Route.findByIdAndUpdate(id, request.body as Partial<{ createdAt: Date; updatedAt: Date; origin: string; routeNumber: string; destination: string; distance: number; duration: number; }>, { new: true });
 
     if (!route) {
       return reply.status(404).send({ error: 'Route not found' });
