@@ -37,8 +37,8 @@ await fastify.register(jwt, {
 await fastify.register(swagger, {
   swagger: {
     info: {
-      title: 'NTC Bus Reservation API',
-      description: 'API for National Transport Commission of Sri Lanka bus reservation system',
+      title: 'Buszy Bus Reservation API',
+      description: 'Web API for National Transport Commission of Sri Lanka Bus Reservation System',
       version: '1.0.0',
     },
     host: 'localhost:3000',
