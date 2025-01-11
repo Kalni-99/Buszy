@@ -37,8 +37,8 @@ await fastify.register(jwt, {
 await fastify.register(swagger, {
   openapi: {
     info: {
-      title: 'NTC Bus Reservation API',
-      description: 'API for National Transport Commission of Sri Lanka bus reservation system',
+      title: 'Buszy Bus Reservation API',
+      description: 'Web API for National Transport Commission of Sri Lanka Bus Reservation System',
       version: '1.0.0',
     },
     servers: [
@@ -55,33 +55,26 @@ await fastify.register(swagger, {
         description: 'Local development server',
       },
     ],
-    consumes: ['application/json'],
-    produces: ['application/json'],
-    securityDefinitions: {
-      Bearer: {
-        type: 'apiKey',
-        name: 'Authorization',
-        in: 'header',
-        description: 'Enter your bearer token in the format **Bearer &lt;token&gt;**'
+    components: {
+      securitySchemes: {
+        Bearer: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Enter your bearer token in the format **Bearer <token>**'
+        }
       }
-    }
-  },
+    },
+    security: [
+      {
+        Bearer: []
+      }
+    ]
+  }
 });
 
 await fastify.register(swaggerUi, {
-  routePrefix: '/documentation',
-  uiConfig: {
-    docExpansion: 'full',
-    deepLinking: false
-  },
-  uiHooks: {
-    onRequest: function (request, reply, next) { next(); },
-    preHandler: function (request, reply, next) { next(); }
-  },
-  staticCSP: true,
-  transformStaticCSP: (header) => header,
-  transformSpecification: (swaggerObject, request, reply) => { return swaggerObject },
-  transformSpecificationClone: true
+  routePrefix: '/documentation'
 });
 
 // Register routes
@@ -106,7 +99,7 @@ fastify.get('/', async (request, reply) => {
 
 // Start server
 try {
-  await fastify.listen({ port: 80, host: '0.0.0.0' });
+  await fastify.listen({ port: 3000, host: '0.0.0.0' });
   console.log('Server is running on http://localhost:3000');
 } catch (err) {
   fastify.log.error(err);
