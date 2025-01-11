@@ -35,14 +35,26 @@ await fastify.register(jwt, {
 
 // Swagger documentation
 await fastify.register(swagger, {
-  swagger: {
+  openapi: {
     info: {
       title: 'NTC Bus Reservation API',
       description: 'API for National Transport Commission of Sri Lanka bus reservation system',
       version: '1.0.0',
     },
-    host: 'localhost:3000',
-    schemes: ['http'],
+    servers: [
+      {
+        url: 'http://api.buszy.me',
+        description: 'Production server',
+      },
+      {
+        url: 'http://54.243.114.235',
+        description: 'Production server (IP Address)',
+      },
+      {
+        url: 'http://localhost:3000',
+        description: 'Local development server',
+      },
+    ],
     consumes: ['application/json'],
     produces: ['application/json'],
     securityDefinitions: {
@@ -78,10 +90,23 @@ fastify.register(bookingRoutes, { prefix: '/api/bookings' });
 fastify.register(routeRoutes, { prefix: '/api/routes' });
 fastify.register(busRoutes, { prefix: '/api/buses' });
 fastify.register(scheduleRoutes, { prefix: '/api/schedules' });
+fastify.get('/', async (request, reply) => {
+  reply.type('text/html').send(`
+    <html>
+      <head><title>Buszy API</title></head>
+      <body align="center">
+        <h1>Welcome to Buszy Bus Reservation API</h1>
+        <p>Visit <a href="/documentation">API Documentation</a></p>
+        <p>Author: Kalani</p>
+      </body>
+    </html>
+  `);
+});
+
 
 // Start server
 try {
-  await fastify.listen({ port: 3000, host: '0.0.0.0' });
+  await fastify.listen({ port: 80, host: '0.0.0.0' });
   console.log('Server is running on http://localhost:3000');
 } catch (err) {
   fastify.log.error(err);
