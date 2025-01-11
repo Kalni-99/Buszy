@@ -45,11 +45,31 @@ await fastify.register(swagger, {
     schemes: ['http'],
     consumes: ['application/json'],
     produces: ['application/json'],
+    securityDefinitions: {
+      Bearer: {
+        type: 'apiKey',
+        name: 'Authorization',
+        in: 'header',
+        description: 'Enter your bearer token in the format **Bearer &lt;token&gt;**'
+      }
+    }
   },
 });
 
 await fastify.register(swaggerUi, {
   routePrefix: '/documentation',
+  uiConfig: {
+    docExpansion: 'full',
+    deepLinking: false
+  },
+  uiHooks: {
+    onRequest: function (request, reply, next) { next(); },
+    preHandler: function (request, reply, next) { next(); }
+  },
+  staticCSP: true,
+  transformStaticCSP: (header) => header,
+  transformSpecification: (swaggerObject, request, reply) => { return swaggerObject },
+  transformSpecificationClone: true
 });
 
 // Register routes

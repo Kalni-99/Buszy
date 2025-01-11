@@ -31,11 +31,7 @@ export class ScheduleController {
   }
 
   async updateSchedule(request: FastifyRequest, reply: FastifyReply) {
-    const user = request.user as any;
-    if (user.role !== 'ADMIN' && user.role !== 'OPERATOR') {
-      return reply.status(403).send({ error: 'Unauthorized' });
-    }
-
+ 
     const { id } = request.params as any;
     const schedule = await Schedule.findByIdAndUpdate(id, request.body as any, { 
       new: true 

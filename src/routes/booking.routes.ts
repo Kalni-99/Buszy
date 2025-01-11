@@ -8,6 +8,7 @@ export async function bookingRoutes(fastify: FastifyInstance) {
   fastify.post('/', {
     schema: {
       tags: ['Bookings'],
+      security: [{ Bearer: [] }],
       body: {
         type: 'object',
         required: ['scheduleId', 'seatNumber'],
@@ -44,14 +45,56 @@ export async function bookingRoutes(fastify: FastifyInstance) {
         }
       }
     },
-    //onRequest: [fastify.authenticate]
+    onRequest: [fastify.authenticate]
   }, (req, reply) => bookingController.create(req, reply));
 
   fastify.get('/my-bookings', {
-   // onRequest: [fastify.authenticate],
+    schema: {
+      tags: ['Bookings'],
+      security: [{ Bearer: [] }],
+      response: {
+        200: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              routeNumber: { type: 'string' },
+              origin: { type: 'string' },
+              destination: { type: 'string' },
+              seatNumber: { type: 'number' },
+              status: { type: 'string', enum: Object.values(BookingStatus) },
+              createdAt: { type: 'string' },
+              updatedAt: { type: 'string' }
+            }
+          }
+        }
+      }
+    },
+    onRequest: [fastify.authenticate],
   }, (req) => bookingController.getUserBookings(req));
 
   fastify.patch('/:id/cancel', {
-    //onRequest: [fastify.authenticate],
+    schema: {
+      tags: ['Bookings'],
+      security: [{ Bearer: [] }],
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string' }
+        }
+      },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean' },
+            message: { type: 'string' }
+          }
+        }
+      }
+    },
+    onRequest: [fastify.authenticate],
   }, (req, reply) => bookingController.cancelBooking(req, reply));
 }

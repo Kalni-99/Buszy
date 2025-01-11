@@ -32,10 +32,6 @@ export class RouteController {
   }
 
   async updateRoute(request: FastifyRequest, reply: FastifyReply) {
-    const user = request.user as any;
-    if (user.role !== 'ADMIN') {
-      return reply.status(403).send({ error: 'Unauthorized' });
-    }
 
     const { id } = request.params as any;
     const route = await Route.findByIdAndUpdate(id, request.body as Partial<{ createdAt: Date; updatedAt: Date; origin: string; routeNumber: string; destination: string; distance: number; duration: number; }>, { new: true });
